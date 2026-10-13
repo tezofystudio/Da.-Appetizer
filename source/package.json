@@ -1,0 +1,17 @@
+{
+  "name": "da-appetizer-immersive-menu",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 3000",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0 --port 3000",
+    "publish:site": "vite build && node scripts/publish.mjs",
+    "offline-demo": "vite build && python3 export_demo.py"
+  },
+  "devDependencies": {
+    "vite": "^6.4.4",
+    "@playwright/test": "^1.64.0"
+  }
+}

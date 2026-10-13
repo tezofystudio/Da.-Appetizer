@@ -2,15 +2,49 @@
 
 A responsive, bilingual (English default / বাংলা) restaurant microsite for desktop and mobile. Includes mobile bottom tabs for Home, Menu, Reviews, Location, and Order; the Order tab opens Foodpanda because native checkout is not yet connected. Also includes dark/light theme, category search, 3D-inspired menu-board cards with ten AI-generated food illustrations and one inline-vector curry-bowl fallback, a gentle sliding/shimmer Order-tab cue (disabled for reduced-motion preferences), location and review views.
 
+## What's new — immersive item preview (v2)
+
+Tapping a category on Home/Menu now opens a full-screen, app-style item preview (sample dishes, clearly marked **demo prices** — not the restaurant's real menu):
+
+- 3D-style food photo that rises from its card, rotates gently, with clean rising steam; drag to tilt, swipe or use the arrows to move around a 360° ring of 11 sample dishes.
+- Endless icon + name ticker of all dishes (random order) above the category name; thumbnail slider under the dish name. Tap either to jump to a dish.
+- Details/price sheet hidden by default — swipe up to show, swipe down to hide.
+- The bottom navigation auto-hides 2 s after opening or after any touch; touch brings it back. While it is hidden, the price and the order-cart button drop into its place. While it is visible, a category button takes the cart button's spot.
+- Cart: the food shrinks into a floating popup and the order sheet rises from below. Demo orders are saved only in the browser (`localStorage`); there is no real checkout or payment. Real ordering still goes to Foodpanda.
+- English / বাংলা, light/dark, reduced-motion support, works offline once loaded.
+
+## Repository layout
+
+| Path | What it is |
+| --- | --- |
+| `index.html`, `app/`, `experience.css`, `fonts.css`, `fonts/`, `images/` | **Built site** served by GitHub Pages (do not hand-edit `app/`; it is generated) |
+| `assets/` | Original image source copies (unchanged) |
+| `source/` | Vite source of the immersive preview — edit here |
+| `source/README.bn.md` | Feature notes in Bangla |
+
+### Updating the site
+
+```bash
+cd source
+npm install
+npm run dev            # live preview at http://localhost:3000
+npm run publish:site   # build and copy the result to the repo root
+cd ..
+git add -A && git commit -m "Update immersive preview" && git push
+```
+
+`npm run offline-demo` creates a single self-contained HTML file (`Da-Appetizer-immersive-menu.html`, ignored by git).
+Fonts (DM Sans, Manrope, Hind Siliguri) are self-hosted under the SIL Open Font License; licences are in `fonts/`.
+
 ## Run
 
-Open `index.html` in a modern browser, or serve this folder:
+Open `index.html` in a modern browser, or serve this folder (serving is recommended — the preview loads `app/`, `images/` and `fonts/` next to `index.html`):
 
 ```bash
 python -m http.server 8000 --bind 0.0.0.0
 ```
 
-The images are embedded as data URIs in `index.html`; `assets/` holds source copies for later updates.
+The original site's images are embedded as data URIs in `index.html`; `assets/` holds source copies for later updates. The immersive preview's dish photos live in `images/`.
 
 ## Publicly sourced details used
 

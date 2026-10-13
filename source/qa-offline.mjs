@@ -1,0 +1,21 @@
+import {chromium} from '@playwright/test';
+const b=await chromium.launch();const errors=[],external=[];
+const p=await b.newPage({viewport:{width:390,height:844},hasTouch:true});
+p.on('pageerror',e=>errors.push(e.message));
+p.on('request',r=>{const u=r.url();if(!u.startsWith('file:')&&!u.startsWith('data:')&&!u.startsWith('blob:'))external.push(u)});
+await p.goto('file:///home/user/Da-Appetizer-immersive-menu.html',{waitUntil:'load'});await p.waitForTimeout(500);
+console.log('Categories',await p.locator('#homeCats .category-card').count());
+console.log('Fonts',await p.evaluate(async()=>{const a=await document.fonts.load('16px "Hind Siliguri"','বাংলা');const m=await document.fonts.load('700 16px Manrope','Menu');return a.length>0&&m.length>0}));
+await p.locator('#homeCats [data-cat="Pizza"]').click();await p.waitForTimeout(1100);
+console.log('Food',await p.locator('#daFoodTitle').innerText(),await p.locator('.da-current .da-food-image').evaluate(i=>i.complete&&i.naturalWidth>0));
+await p.locator('[data-da-action="sheet-up"]').click();await p.waitForTimeout(800);await p.locator('.da-add-button').click();await p.locator('.da-sheet-cart').click();await p.waitForTimeout(850);
+console.log('Cart',await p.locator('.da-summary-total strong').innerText());
+// Sandbox iframe like the in-app viewer
+const f=await b.newPage({viewport:{width:420,height:900}});f.on('pageerror',e=>errors.push('iframe '+e.message));
+const html=(await import('node:fs')).readFileSync('/home/user/Da-Appetizer-immersive-menu.html','utf8');
+await f.setContent(`<iframe sandbox="allow-scripts" style="width:390px;height:844px;border:0"></iframe>`);
+await f.locator('iframe').evaluate((el,h)=>el.srcdoc=h,html);await f.waitForTimeout(1500);
+const fr=f.frameLocator('iframe');await fr.locator('#homeCats [data-cat="Burger"]').click();await f.waitForTimeout(1100);
+console.log('Sandbox food',await fr.locator('#daFoodTitle').innerText());
+await fr.locator('.da-cart-fab').click();await f.waitForTimeout(800);console.log('Sandbox cart visible',await fr.locator('#daCartSheet').isVisible());
+console.log('External',[...new Set(external)].filter(u=>!u.includes('foodpanda')));console.log('Errors',errors);await b.close();
